@@ -1,0 +1,9 @@
+autopep8==1.7.0
+colored==1.4.3
+commonmark==0.9.1
+pycodestyle==2.9.1
+Pygments==2.13.0
+rich==12.6.0
+termcolor==2.0.1
+toml==0.10.2
+typing-extensions==4.4.0
