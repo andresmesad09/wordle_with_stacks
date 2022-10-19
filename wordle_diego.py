@@ -9,10 +9,9 @@ SQUARES = {
     'incorrect_letter': '⬛'
 }
 
-WELCOME_MESSAGE = f'\n[white on blue] WELCOME TO WORDLE [/]\n'
-PLAYER_INSTRUCTIONS = "You may start guessing\n"
-GUESS_STATEMENT = "\nEnter your gues: "
-ALLOWED_GUESSES = 6
+WELCOME_MESSAGE = f'\n[white on blue] BIENVENIDO A WORDLE [/]\n'
+PLAYER_INSTRUCTIONS = "ADIVINA LA PALABRA \n"
+GUESS_STATEMENT = "\nINGRESA TU PALABRA:  "
 
 
 def check_guess(guess: Queue, answer: str):
@@ -26,16 +25,15 @@ def check_guess(guess: Queue, answer: str):
     wordle_pattern = []
     # contar posiciones correctas
     aciertos = 0
-    # hacer copia de lista
-    answer_full_queue = answer_queue.queue.copy()
-    for _ in range(5):
+    answe_full_queue = answer_queue.queue.copy()
+    for _ in range(len(chosen_word)):
         letter = guess.dequeue()
         if answer_queue.dequeue() == letter:
             my_letter = Letter(letter, '[black on green]')
             guessed += my_letter.set_up
             wordle_pattern.append(SQUARES['correct_place'])
             aciertos += 1
-        elif letter in answer_full_queue:
+        elif letter in answe_full_queue:
             my_letter = Letter(letter, '[black on yellow]')
             guessed += my_letter.set_up
             wordle_pattern.append(SQUARES['correct_letter'])
@@ -58,8 +56,9 @@ def game(console, chosen_word):
         guess = input(GUESS_STATEMENT).upper()  # str
 
         # si la palabra no es de 5 letras, pedir nuevamente
-        while len(guess) != 5:
-            console.print('[red]Please enter a 5-letter word!!\n[/]')
+        while len(guess) != len(chosen_word):
+
+            console.print('[red]ERROR!! NO CUMPLE EL TAMAÑO\n[/]')
             guess = input(GUESS_STATEMENT).upper()
 
         # encolamos cada letra
@@ -75,29 +74,29 @@ def game(console, chosen_word):
         full_wordle_pattern.append(pattern)
 
         console.print(*all_words_guessed, sep="\n")
-
-        if already_guessed == ALLOWED_GUESSES or aciertos == 5:
+        # los intentos cambian, al ser la palabra mas larga o corta
+        if already_guessed == len(chosen_word) or aciertos == len(guess):
             end_of_game = True
 
-    if already_guessed == ALLOWED_GUESSES and guess != chosen_word:
-        console.print(f"\n[red]WORDLE X/{ALLOWED_GUESSES}[/]")
-        console.print(f'\n[green]Correct Word: {chosen_word}[/]')
+    if already_guessed == len(chosen_word) and guess != chosen_word:
+        console.print(f"\n[red]WORDLE X/{len(chosen_word)}[/]")
+        console.print(f'\n[green]Palabra correcta: {chosen_word}[/]')
     else:
         console.print(
-            f"\n[green]WORDLE {already_guessed}/{ALLOWED_GUESSES}[/]\n")
+            f"\n[green]WORDLE {already_guessed}/{len(chosen_word)}[/]\n")
     console.print(*full_wordle_pattern, sep="\n")
 
 
 if __name__ == '__main__':
-    # instanciamos Console, para enriquecer el output de la consola
+
     console = Console()
-    # elegimos la palabra del banco de palabras
-    chosen_word = choice(word_list)
-    # Imprimimos mensaje de bienvenida
+
+    chosen_word = str(input("Ingrese la palabra que quiere adivinar: "))
+
     console.print(WELCOME_MESSAGE)
-    # TODO: Borrar esto
+
     console.print(f'\n{chosen_word}\n')
-    # Imprimimos instrucciones
+
     console.print(PLAYER_INSTRUCTIONS)
-    # llamamos a la funcion game
+
     game(console, chosen_word)
